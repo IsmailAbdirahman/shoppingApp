@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "83833412591",
+    "firebase_url": "https://ladhiifj.firebaseio.com",
+    "project_id": "ladhiifj",
+    "storage_bucket": "ladhiifj.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83833412591:android:48af483529f0bdbf3df41a",
+        "android_client_info": {
+          "package_name": "shopj.ladhiifj.ladhiifshopj"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "83833412591-s1cnaje8v33lbohuat39j38m5lvas50r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "shopj.ladhiifj.ladhiifshopj",
+            "certificate_hash": "a516f2312be481ca3b51e921824d866afafa2409"
+          }
+        },
+        {
+          "client_id": "83833412591-d1ichbhuaa4e091aunsgfng8hibdhl54.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZC2qnviFZkTcah7GkwnAvzXfb4kxMGr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "83833412591-d1ichbhuaa4e091aunsgfng8hibdhl54.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
