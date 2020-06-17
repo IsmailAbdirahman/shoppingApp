@@ -25,6 +25,7 @@ class OrderedListState extends State<OrderedList> {
             return Container(
               margin: EdgeInsets.all(4.0),
               child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 itemCount: orderedModel.length,
                 itemBuilder: (context, index) {
@@ -83,13 +84,16 @@ class OrderSlideCard extends StatelessWidget {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Color(0xff18171b)),
-                child:orderedModel.isDelivered!=null && orderedModel.isDelivered? Icon(
-                  Icons.shopping_basket,
-                  color: Colors.greenAccent,
-                ):Icon(
-                  Icons.local_shipping,
-                  color: Colors.deepOrange,
-                )),
+                child:
+                    orderedModel.isDelivered != null && orderedModel.isDelivered
+                        ? Icon(
+                            Icons.shopping_basket,
+                            color: Colors.greenAccent,
+                          )
+                        : Icon(
+                            Icons.local_shipping,
+                            color: Colors.deepOrange,
+                          )),
           ),
           Positioned(
             bottom: 12,

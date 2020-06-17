@@ -1,82 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ladhiifshopj/DataModel/UserInfoModel.dart';
+import 'package:ladhiifshopj/DataService/FireStoreService.dart';
 import 'package:ladhiifshopj/ProductList/DetailScreen.dart';
-import 'package:ladhiifshopj/ProductList/ProductTile.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
 import 'package:provider/provider.dart';
 
-//
-//class ProductList extends StatefulWidget {
-//  @override
-//  _BrewListState createState() => _BrewListState();
-//}
-//
-//class _BrewListState extends State<ProductList> {
-//  @override
-//  Widget build(BuildContext context) {
-//    final productModel = Provider.of<List<ProductModel>>(context);
-//
-//    return MaterialApp(
-//      debugShowCheckedModeBanner: false,
-//      home: productModel != null
-//          ? Scaffold(
-//              backgroundColor: Color(0xFF7A9BEE),
-//              body: ListView(
-//                children: <Widget>[
-//                  SizedBox(
-//                    height: 75.0,
-//                  ),
-//                  Padding(
-//                      padding: EdgeInsets.only(left: 40.0),
-//                      child: Row(
-//                        children: <Widget>[
-//                          Text(
-//                            'Ladhiif',
-//                            style: TextStyle(
-//                              fontFamily: 'montserrat',
-//                              color: Colors.white,
-//                              fontSize: 25.0,
-//                              fontWeight: FontWeight.bold,
-//                            ),
-//                          ),
-//                          SizedBox(
-//                            width: 10.0,
-//                          ),
-//                          Text(
-//                            'Shop',
-//                            style: TextStyle(
-//                              fontFamily: 'montserrat',
-//                              color: Colors.white,
-//                              fontSize: 25.0,
-//                            ),
-//                          ),
-//                        ],
-//                      )),
-//                  SizedBox(
-//                    height: 40,
-//                  ),
-//                  Container(
-//                    height: MediaQuery.of(context).size.height - 185.0,
-//                    decoration: BoxDecoration(
-//                        color: Colors.white,
-//                        borderRadius:
-//                            BorderRadius.only(topLeft: Radius.circular(75.0))),
-//                    child: ListView.builder(
-//                      primary: false,
-//                      padding: EdgeInsets.only(left: 25.0, right: 20.0),
-//                      shrinkWrap: true,
-//                      physics: ScrollPhysics(),
-//                      itemCount: productModel.length,
-//                      itemBuilder: (context, index) {
-//                        return ProductTile(productModel: productModel[index]);
-//                      },
-//                    ),
-//                  ),
-//                ],
-//              ))
-//          : Scaffold(body: Center(child: CircularProgressIndicator())),
-//    );
-//  }
-//}
 
 class ProductList extends StatefulWidget {
   @override
@@ -86,10 +14,13 @@ class ProductList extends StatefulWidget {
 class _ProductListState extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
-    final productModel = Provider.of<List<ProductModel>>(context);
+    return StreamBuilder<List<ProductModel>>(
+      stream: FireStoreService().productStream,
+      builder: (BuildContext context, snapshot){
 
-    return productModel != null
-        ? Scaffold(
+        if(snapshot.hasData){
+          List<ProductModel> productModel = snapshot.data;
+          return Scaffold(
             backgroundColor: Color(0Xff24202b),
             body: Container(
               margin: EdgeInsets.only(top: 90),
@@ -108,8 +39,12 @@ class _ProductListState extends State<ProductList> {
                 ],
               ),
             ),
-          )
-        : CircularProgressIndicator();
+          );
+        }else{
+          return CircularProgressIndicator();
+        }
+      }
+    );
   }
 
   Widget _theShopNameWidget() {
@@ -164,6 +99,7 @@ class _ProductListState extends State<ProductList> {
   Widget listViewWidget(var productModell) {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
+        physics: BouncingScrollPhysics(),
         itemCount: productModell.length,
         itemBuilder: (_, int index) {
           return SlideCard(
@@ -174,28 +110,28 @@ class _ProductListState extends State<ProductList> {
 }
 
 class SlideCard extends StatelessWidget {
-  // final String imageUrl, price, name, type;
   final ProductModel productModel;
 
   SlideCard({this.productModel});
 
   @override
   Widget build(BuildContext context) {
+    final userID = Provider.of<UserModel>(context);
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    DetailScreen(productModel: productModel)));
+                    DetailScreen(productModel: productModel,userID: userID.uid,)));
       },
       child: Stack(
         children: <Widget>[
           Hero(
             tag: productModel.productImage,
             child: Container(
-              padding:
-                  const EdgeInsets.only(top: 15, right: 20, left: 30, bottom: 20),
+              padding: const EdgeInsets.only(
+                  top: 15, right: 20, left: 30, bottom: 20),
               width: 380,
               height: 590,
               child: ClipRRect(
@@ -206,7 +142,7 @@ class SlideCard extends StatelessWidget {
               ),
             ),
           ),
-         // Text("kakakaka",style: TextStyle(color: Colors.white),),
+          // Text("kakakaka",style: TextStyle(color: Colors.white),),
           Positioned(
             bottom: 297,
             left: 66,

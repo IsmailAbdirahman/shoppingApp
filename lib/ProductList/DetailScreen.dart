@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
+import 'package:ladhiifshopj/DataModel/UserModel.dart';
 import 'package:ladhiifshopj/DataService/FireStoreService.dart';
+import 'package:ladhiifshopj/SignInWithGoogle/AlertDailogForPhoneAndLocation.dart';
+import 'package:ladhiifshopj/SignInWithGoogle/SignInWithGoogle.dart';
+import 'package:ladhiifshopj/Wrapper.dart';
+import 'package:provider/provider.dart';
 
 class DetailScreen extends StatefulWidget {
   final ProductModel productModel;
+  final String userID;
 
-  DetailScreen({this.productModel});
-
-
-
-
+  DetailScreen({this.productModel,this.userID});
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -77,8 +79,6 @@ class _DetailScreenState extends State<DetailScreen> {
     prce = int.parse(widget.productModel.productPrice) * _counter;
   }
 
-
-
   @override
   void initState() {
     super.initState();
@@ -87,7 +87,14 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    return StreamBuilder<UserData>(
+      stream: FireStoreService(uid:widget.userID).userInfo,
+      builder: (BuildContext context,snapshot){
+        UserData userData = snapshot.data;
+        if(snapshot.hasData){
+
+          return Scaffold(
 //      backgroundColor: Color(0xFF7A9BEE),
 //      appBar: AppBar(
 //        leading: IconButton(
@@ -201,18 +208,23 @@ class _DetailScreenState extends State<DetailScreen> {
 //        ],
 //      ),
 //    );
-        backgroundColor: Color(0Xff24202b),
-        body: Stack(
-          children: <Widget>[
-            imageDetail(),
-            backButton(context),
-            increaseAndDecreaseButton(),
-            priceWidget(),
-            _sizeOfShoeWidget(),
-            orderButton(),
-            //  orderButton(),
-          ],
-        ));
+              backgroundColor: Color(0Xff24202b),
+              body: Stack(
+                children: <Widget>[
+                  imageDetail(),
+                  backButton(context),
+                  increaseAndDecreaseButton(),
+                  priceWidget(),
+                  _sizeOfShoeWidget(),
+                  orderButton(userData.location,userData.phone),
+                  //  orderButton(),
+                ],
+              ));
+        }else{
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 
   orderedItem(String image, String price) async {
@@ -226,7 +238,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Widget imageDetail() {
     return Hero(
-      tag:widget.productModel.productImage,
+      tag: widget.productModel.productImage,
       child: Container(
         //   height: MediaQuery.of(context).size.width,
         height: 430,
@@ -358,16 +370,22 @@ class _DetailScreenState extends State<DetailScreen> {
             .toList());
   }
 
-  Widget orderButton() {
+  Widget orderButton(String location,String phoneNumber) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), color: Color(0Xff2b3144)),
       margin: const EdgeInsets.only(top: 670, left: 164),
       child: FlatButton(
         onPressed: () async {
-          orderedImage = widget.productModel.productImage;
-          orderedPrice = widget.productModel.productPrice;
-          await orderedItem(orderedImage, orderedPrice);
+          if(location==""||phoneNumber==""){
+           Navigator.push(context, MaterialPageRoute(builder: (context)=>AlertDailogForPhoneAndLocation()));
+          }else{
+            orderedImage = widget.productModel.productImage;
+            orderedPrice = widget.productModel.productPrice;
+            await orderedItem(orderedImage, orderedPrice);
+
+            Navigator.pop(context);
+          }
         },
         child: Text(
           "Order",
