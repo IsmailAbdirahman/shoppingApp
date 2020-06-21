@@ -17,44 +17,63 @@ class _AlertDailogForPhoneAndLocationState
   Widget build(BuildContext context) {
     TextEditingController locationEditingController = TextEditingController();
     TextEditingController phoneEditingController = TextEditingController();
-    return Dialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0)), //this right here
-      child: Container(
-        height: 200,
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: locationEditingController,
-                decoration: InputDecoration(
-                    border: InputBorder.none, hintText: 'Location'),
-              ),
-              TextField(
-                controller: phoneEditingController,
-                decoration: InputDecoration(
-                    border: InputBorder.none, hintText: 'PhoneNumber'),
-              ),
-              SizedBox(
-                width: 320.0,
-                child: RaisedButton(
-                  onPressed: () {
-                    fireStoreService.updateLocationAndPhoneNo(
-                        locationEditingController.text,
-                        phoneEditingController.text);
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
+    return Scaffold(
+      backgroundColor: Color(0Xff24202b),
+      body: Dialog(
+        elevation: 5,
+        backgroundColor: Color(0Xff2b3144),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0)), //this right here
+        child: Container(
+          height: 200,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: locationEditingController,
+                  style: TextStyle(color: Colors.white70),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Location',
+                    hintStyle: TextStyle(color: Colors.grey),
                   ),
-                  color: const Color(0xFF1BC0C5),
                 ),
-              )
-            ],
+                TextField(
+                  keyboardType: TextInputType.phone,
+                  controller: phoneEditingController,
+                  style: TextStyle(color: Colors.white70),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'PhoneNumber',
+                    hintStyle: TextStyle(color: Colors.grey),
+                  ),
+                ),
+                SizedBox(
+                  width: 320.0,
+                  child: RaisedButton(
+                    onPressed: () {
+                      if (locationEditingController.text == "" &&
+                          phoneEditingController.text == "") {
+                        print("please fill the blanks");
+                      } else {
+                        fireStoreService.updateLocationAndPhoneNo(
+                            locationEditingController.text,
+                            phoneEditingController.text);
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text(
+                      "Save",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: const Color(0xFF1BC0C5),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

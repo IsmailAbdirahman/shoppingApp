@@ -6,7 +6,7 @@ import 'package:ladhiifshopj/DataModel/UserModel.dart';
 
 class FireStoreService {
   final CollectionReference productData =
-      Firestore.instance.collection('textt');
+      Firestore.instance.collection('product');
   final CollectionReference userData =
       Firestore.instance.collection('userData');
   final CollectionReference orderedData =
@@ -59,18 +59,22 @@ class FireStoreService {
 
 //------------------------------------------------------------------------------------------------//
   // store images and price in firestore  ADMIN
-  Future updateProductImageAndPrice(String image, String price) async {
-    return await productData.document(uid).setData({
-      'image': image,
-      'textEntered': price,
-    });
-  }
+//  Future updateProductImageAndPrice(String image, String price) async {
+//    return await productData.document(uid).setData({
+//      'image': image,
+//      'price': price,
+//    });
+//  }
 
   // Product list from snapshot  ADMIN
   List<ProductModel> _productListFromSnapShot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return ProductModel(
-          productPrice: doc.data['textEntered'] ?? '',
+          productPrice: doc.data['price'] ?? '',
+          men: doc.data['Men'],
+          women: doc.data['Women'],
+          productName: doc.data['nameOfProduct'],
+          productDescription: doc.data['descriptionOfProduct'],
           productImage: doc.data['image']);
 
     }).toList();
