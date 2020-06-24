@@ -35,6 +35,12 @@ class FireStoreService {
     });
   }
 
+  Future updateUserInformation({String name, String location, String phoneNumber}) async {
+    final FirebaseUser user = await _auth.currentUser();
+    return await userData.document(user.uid).updateData(
+        {'name': name, 'location': location, 'phoneNumber': phoneNumber});
+  }
+
   //  Retrive
   UserData _userInfoFromsnapshot(DocumentSnapshot snapshot) {
     return UserData(
@@ -48,13 +54,11 @@ class FireStoreService {
     return userData.document(uid).snapshots().map(_userInfoFromsnapshot);
   }
 
-
   updateLocationAndPhoneNo(String location, String phoneNumber) async {
     final FirebaseUser user = await _auth.currentUser();
-    return await userData.document(user.uid).updateData({
-      'location': location,
-      'phoneNumber': phoneNumber
-    });
+    return await userData
+        .document(user.uid)
+        .updateData({'location': location, 'phoneNumber': phoneNumber});
   }
 
 //------------------------------------------------------------------------------------------------//
@@ -76,7 +80,6 @@ class FireStoreService {
           productName: doc.data['nameOfProduct'],
           productDescription: doc.data['descriptionOfProduct'],
           productImage: doc.data['image']);
-
     }).toList();
   }
 
@@ -94,7 +97,7 @@ class FireStoreService {
     await userData.document(user.uid).get().then((DocumentSnapshot snapshot) {
       namee = snapshot.data['name'];
       phonee = snapshot.data['phone'];
-      phoneNumber= snapshot.data['phoneNumber'];
+      phoneNumber = snapshot.data['phoneNumber'];
       locatione = snapshot.data['location'];
     });
     return await orderedData.document(orderIdNowDateTime).setData({
@@ -106,7 +109,7 @@ class FireStoreService {
       'isDelivered': isDelivered,
       'name': namee,
       'phone': phonee,
-      'phoneNumber':phoneNumber,
+      'phoneNumber': phoneNumber,
       'location': locatione
     });
   }

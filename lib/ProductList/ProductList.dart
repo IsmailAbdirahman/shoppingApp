@@ -3,7 +3,10 @@ import 'package:ladhiifshopj/DataModel/UserInfoModel.dart';
 import 'package:ladhiifshopj/DataService/FireStoreService.dart';
 import 'package:ladhiifshopj/ProductList/DetailScreen.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
+import 'package:ladhiifshopj/ProductList/SearchProduct.dart';
 import 'package:provider/provider.dart';
+
+import '../ConfigScreen.dart';
 
 class ProductList extends StatefulWidget {
   @override
@@ -56,26 +59,29 @@ class _ProductListState extends State<ProductList> {
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             List<ProductModel> productModel = snapshot.data;
+            List<ProductModel> proD = List<ProductModel>();
+            proD = productModel;
 
-
-            return Scaffold(
-              backgroundColor: Color(0Xff24202b),
-              body: Container(
-                margin: EdgeInsets.only(top: 90),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        _theShopNameWidget(),
-                        _userProfilePic(),
-                      ],
-                    ),
-                    categories(),
-                    Expanded(
-                      child: listViewWidget(productModel),
-                    )
-                  ],
+            return SafeArea(
+              child: Scaffold(
+                backgroundColor: Color(0Xff24202b),
+                body: Container(
+                  margin: EdgeInsets.only(top: 90),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          _theShopNameWidget(),
+                          searchBar(context, productModel),
+                        ],
+                      ),
+                      categories(),
+                      Expanded(
+                        child: listViewWidget(productModel),
+                      )
+                    ],
+                  ),
                 ),
               ),
             );
@@ -83,6 +89,17 @@ class _ProductListState extends State<ProductList> {
             return CircularProgressIndicator();
           }
         });
+  }
+
+  Widget searchBar(BuildContext context, var searchProductName) {
+    return IconButton(
+      icon: Icon(Icons.search,color: Colors.white70,size: 27,),
+      onPressed: () {
+        showSearch(
+            context: context,
+            delegate: SearchProduct(searchProductName: searchProductName));
+      },
+    );
   }
 
   Widget categories() {
@@ -201,10 +218,12 @@ class _ProductListState extends State<ProductList> {
             return SlideCard(
               productModel: productModel[index],
             );
+
           } else if (productModel[index].women == categoryType) {
             return SlideCard(
               productModel: productModel[index],
             );
+
           } else {
             return Text(" ");
           }
@@ -219,6 +238,8 @@ class SlideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     final userID = Provider.of<UserModel>(context);
     return GestureDetector(
       onTap: () {
@@ -235,6 +256,7 @@ class SlideCard extends StatelessWidget {
           Hero(
             tag: productModel.productImage,
             child: Container(
+
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 color: Color(0xff18171b),
@@ -243,8 +265,8 @@ class SlideCard extends StatelessWidget {
                   top: 30, bottom: 20, left: 20, right: 20),
               padding: const EdgeInsets.only(
                   top: 40, right: 40, left: 40, bottom: 40),
-              width: 356,
-              height: 590,
+              width: SizeConfig.blockSizeHorizontal *88,
+              height: SizeConfig.blockSizeVertical *60,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
                 child: Image(
@@ -255,11 +277,11 @@ class SlideCard extends StatelessWidget {
           ),
           // Text("kakakaka",style: TextStyle(color: Colors.white),),
           Positioned(
-            bottom: 297,
+            bottom: 350,
             left: 66,
             child: Container(
-              height: 55,
-              width: 55,
+              height: SizeConfig.blockSizeVertical *8,
+              width: SizeConfig.blockSizeHorizontal *15,
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),

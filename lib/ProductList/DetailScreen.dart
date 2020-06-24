@@ -8,6 +8,8 @@ import 'package:ladhiifshopj/SignInWithGoogle/SignInWithGoogle.dart';
 import 'package:ladhiifshopj/Wrapper.dart';
 import 'package:provider/provider.dart';
 
+import '../ConfigScreen.dart';
+
 class DetailScreen extends StatefulWidget {
   final ProductModel productModel;
   final String userID;
@@ -87,6 +89,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
 
     return StreamBuilder<UserData>(
       stream: FireStoreService(uid:widget.userID).userInfo,
@@ -241,8 +244,8 @@ class _DetailScreenState extends State<DetailScreen> {
       tag: widget.productModel.productImage,
       child: Container(
         //   height: MediaQuery.of(context).size.width,
-        height: 430,
-        width: 500,
+        height: SizeConfig.blockSizeVertical*60,
+        width: SizeConfig.blockSizeHorizontal * 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.0),
         ),
@@ -377,7 +380,7 @@ class _DetailScreenState extends State<DetailScreen> {
       margin: const EdgeInsets.only(top: 670, left: 164),
       child: FlatButton(
         onPressed: () async {
-          if(location==""||phoneNumber==""){
+          if(location==""|| location == null ||phoneNumber=="" || phoneNumber ==null){
            Navigator.push(context, MaterialPageRoute(builder: (context)=>AlertDailogForPhoneAndLocation()));
           }else{
             orderedImage = widget.productModel.productImage;

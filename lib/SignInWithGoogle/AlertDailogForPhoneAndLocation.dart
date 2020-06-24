@@ -67,7 +67,7 @@ class _AlertDailogForPhoneAndLocationState
                     },
                     child: Text(
                       "Save",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black),
                     ),
                     color: const Color(0xFF1BC0C5),
                   ),
