@@ -6,6 +6,7 @@ class ProductModel {
   bool isDelivered = false;
   final String men;
   final String women;
+  final List<String> avSize;
 
   ProductModel(
       {this.productPrice,
@@ -14,5 +15,9 @@ class ProductModel {
       this.men,
       this.women,
       this.productName,
+      this.avSize,
       this.productDescription});
+
+
+
 }

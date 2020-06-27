@@ -14,11 +14,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-    FireStoreService fireStoreService = FireStoreService();
     final userID = Provider.of<UserModel>(context);
-
-    TextEditingController editLocationController = TextEditingController();
-    TextEditingController editPhoneNumberController = TextEditingController();
 
     return userID != null
         ? SafeArea(
@@ -202,6 +198,7 @@ class _ProfileState extends State<Profile> {
             borderRadius: BorderRadius.circular(10), color: Color(0xff18171b)),
         child: Center(
           child: TextField(
+            keyboardType: TextInputType.phone,
             onSubmitted: (newValue) {
               if (newValue == '' || newValue == null) {
                 _isEditingPhone = true;

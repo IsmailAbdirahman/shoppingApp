@@ -14,7 +14,7 @@ class DetailScreen extends StatefulWidget {
   final ProductModel productModel;
   final String userID;
 
-  DetailScreen({this.productModel,this.userID});
+  DetailScreen({this.productModel, this.userID});
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -23,7 +23,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   FireStoreService dataBaseService = FireStoreService();
 
-  List<String> sizeperShoeList = ['40', '41', '42', '43', '44'];
+  // List<String> sizeperShoeList = ['40', '41', '42', '43', '44'];
   String orderedImage = '';
   String orderedPrice = '';
   int totalPrice = 0;
@@ -31,36 +31,36 @@ class _DetailScreenState extends State<DetailScreen> {
   static int prce = 0;
   int _selectedIndex = 0;
 
-  Widget _diffSizeOfShoes(int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
-      child: Container(
-          height: 50,
-          width: 50,
-          margin: EdgeInsets.only(top: 530),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(60.0),
-          ),
-          child: OutlineButton(
-            disabledBorderColor: Colors.grey,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            onPressed: null,
-            child: Text(
-              sizeperShoeList[index],
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 15,
-                color: _selectedIndex == index ? Colors.white : Colors.grey,
-              ),
-            ),
-          )),
-    );
-  }
+//  Widget _diffSizeOfShoes(int index) {
+//    return GestureDetector(
+//      onTap: () {
+//        setState(() {
+//          _selectedIndex = index;
+//        });
+//      },
+//      child: Container(
+//          height: 50,
+//          width: 50,
+//          margin: EdgeInsets.only(top: 530),
+//          decoration: BoxDecoration(
+//            borderRadius: BorderRadius.circular(60.0),
+//          ),
+//          child: OutlineButton(
+//            disabledBorderColor: Colors.grey,
+//            shape:
+//                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+//            onPressed: null,
+//            child: Text(
+//              sizeperShoeList[index],
+//              style: TextStyle(
+//                fontWeight: FontWeight.w500,
+//                fontSize: 15,
+//                color: _selectedIndex == index ? Colors.white : Colors.grey,
+//              ),
+//            ),
+//          )),
+//    );
+//  }
 
   void _incrementCounter() {
     setState(() {
@@ -85,6 +85,7 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     prce = int.parse(widget.productModel.productPrice);
+    _selectedIndex = int.parse(widget.productModel.avSize[0]);
   }
 
   @override
@@ -92,125 +93,12 @@ class _DetailScreenState extends State<DetailScreen> {
     SizeConfig().init(context);
 
     return StreamBuilder<UserData>(
-      stream: FireStoreService(uid:widget.userID).userInfo,
-      builder: (BuildContext context,snapshot){
+      stream: FireStoreService(uid: widget.userID).userInfo,
+      builder: (BuildContext context, snapshot) {
         UserData userData = snapshot.data;
-        if(snapshot.hasData){
-
+        if (snapshot.hasData) {
           return Scaffold(
-//      backgroundColor: Color(0xFF7A9BEE),
-//      appBar: AppBar(
-//        leading: IconButton(
-//          onPressed: () {
-//            Navigator.of(context).pop();
-//          },
-//          icon: Icon(Icons.arrow_back_ios),
-//          color: Colors.white,
-//        ),
-//        backgroundColor: Colors.transparent,
-//        elevation: 0.0,
-//        title: Text(' Details'),
-//        centerTitle: true,
-//      ),
-//      body: ListView(
-//        children: <Widget>[
-//          Stack(
-//            children: <Widget>[
-//              Container(
-//                height: MediaQuery.of(context).size.height - 82.0,
-//                width: MediaQuery.of(context).size.width,
-//                color: Colors.transparent,
-//              ),
-//              Positioned(
-//                top: 75,
-//                child: Container(
-//                  decoration: BoxDecoration(
-//                    borderRadius: BorderRadius.only(
-//                      topLeft: Radius.circular(35.0),
-//                      topRight: Radius.circular(35.0),
-//                      //color:Colors.white ,
-//                    ),
-//                    color: Colors.white,
-//                  ),
-//                  height: MediaQuery.of(context).size.height - 100.0,
-//                  width: MediaQuery.of(context).size.width,
-//                ),
-//              ),
-//
-//              /// INCREMENT AND DECREMENT BUTTONS
-//
-//              Positioned(
-//                top: 563.0,
-//                left: 70,
-//                child: Container(
-//                  margin: EdgeInsets.all(12),
-//                  child: IconButton(
-//                    icon: Icon(Icons.add),
-//                    onPressed:_incrementCounter,
-//                  ),
-//                ),
-//              ),
-//              Positioned(
-//                  top: 590.0,
-//                  left: 70,
-//                  child: Text('$_counter')),
-//              Positioned(
-//                top: 566.0,
-//                left: 30,
-//                child: IconButton(
-//                  onPressed: _decrementCounter,
-//                  icon: Icon(Icons.minimize),
-//                ),
-//              ),
-//              Hero(
-//                tag: widget.productModel.productImage,
-//                child: imageDetail(),
-//              ),
-//              Positioned(
-//                top: 652.0,
-//                left: 25.0,
-//                right: 25.0,
-//                child: Column(
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  children: <Widget>[
-//                    Center(
-//                      child: Text(
-//                        '\$' '${widget.productModel.productPrice}',
-//                        style: TextStyle(
-//                          fontWeight: FontWeight.bold,
-//                          fontSize: 13.0,
-//                        ),
-//                      ),
-//                    ),
-//                  ],
-//                ),
-//              ),
-//              SizedBox(height: 90),
-//              Positioned(
-//                top: 466.0,
-//                left: 25.0,
-//                right: 25.0,
-//                child: Container(
-//                  child: FlatButton(
-//                    color: Color(0xFF7A9BEE),
-//                    child: Text(
-//                      'Order',
-//                      style: TextStyle(color: Colors.white),
-//                    ),
-//                    onPressed: () async {
-//                      orderedImage = widget.productModel.productImage;
-//                      orderedPrice = widget.productModel.productPrice;
-//                      await orderedItem(orderedImage, orderedPrice);
-//                    },
-//                  ),
-//                ),
-//              ),
-//
-//            ],
-//          )
-//        ],
-//      ),
-//    );
+
               backgroundColor: Color(0Xff24202b),
               body: Stack(
                 children: <Widget>[
@@ -218,12 +106,12 @@ class _DetailScreenState extends State<DetailScreen> {
                   backButton(context),
                   increaseAndDecreaseButton(),
                   priceWidget(),
-                  _sizeOfShoeWidget(),
-                  orderButton(userData.location,userData.phone),
+                  getIndexOfShoeSizeList(widget.productModel.avSize),
+                  orderButton(userData.location, userData.phone),
                   //  orderButton(),
                 ],
               ));
-        }else{
+        } else {
           return Center(child: CircularProgressIndicator());
         }
       },
@@ -244,7 +132,7 @@ class _DetailScreenState extends State<DetailScreen> {
       tag: widget.productModel.productImage,
       child: Container(
         //   height: MediaQuery.of(context).size.width,
-        height: SizeConfig.blockSizeVertical*60,
+        height: SizeConfig.blockSizeVertical * 60,
         width: SizeConfig.blockSizeHorizontal * 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.0),
@@ -363,26 +251,69 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Widget _sizeOfShoeWidget() {
+  //get the list of shoeSize and convert it as a index
+  //pass the index value to _buildSHoeSize() and get the
+  // corresponded String from avSize list which we got as a constructor
+  Widget getIndexOfShoeSizeList(List shoeSize) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: sizeperShoeList
+        children: shoeSize
             .asMap()
             .entries
-            .map((singleType) => _diffSizeOfShoes(singleType.key))
+            .map((singleType) => _buildSHoeSize(singleType.key))
             .toList());
   }
 
-  Widget orderButton(String location,String phoneNumber) {
+
+  Widget _buildSHoeSize(int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        //  print("you selected @@@@@@@@@@ ${widget.productModel.avSize[_selectedIndex]}");
+
+        });
+      },
+      child: Container(
+          height: 50,
+          width: 50,
+          margin: EdgeInsets.only(top: 530),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(60.0),
+          ),
+          child: OutlineButton(
+            disabledBorderColor: Colors.grey,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            onPressed: null,
+            child: Text(
+              widget.productModel.avSize[index].toString(),
+              style: TextStyle(
+                color: _selectedIndex == index ? Colors.white : Colors.grey,
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              ),
+            ),
+          )),
+    );
+  }
+
+  Widget orderButton(String location, String phoneNumber) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), color: Color(0Xff2b3144)),
       margin: const EdgeInsets.only(top: 670, left: 164),
       child: FlatButton(
         onPressed: () async {
-          if(location==""|| location == null ||phoneNumber=="" || phoneNumber ==null){
-           Navigator.push(context, MaterialPageRoute(builder: (context)=>AlertDailogForPhoneAndLocation()));
-          }else{
+          if (location == "" ||
+              location == null ||
+              phoneNumber == "" ||
+              phoneNumber == null) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AlertDailogForPhoneAndLocation()));
+          } else {
             orderedImage = widget.productModel.productImage;
             orderedPrice = widget.productModel.productPrice;
             await orderedItem(orderedImage, orderedPrice);

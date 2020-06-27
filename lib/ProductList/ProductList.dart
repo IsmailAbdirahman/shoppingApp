@@ -20,7 +20,7 @@ class _ProductListState extends State<ProductList> {
   List<ProductModel> female;
   List<String> categoryList = ['Men', 'Women'];
 
-  Widget _diffSizeOfShoes(int index) {
+  Widget genderType(int index) {
     print("OUTSIDE ${categoryList[index]}");
     return GestureDetector(
       onTap: () {
@@ -59,8 +59,6 @@ class _ProductListState extends State<ProductList> {
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             List<ProductModel> productModel = snapshot.data;
-            List<ProductModel> proD = List<ProductModel>();
-            proD = productModel;
 
             return SafeArea(
               child: Scaffold(
@@ -108,7 +106,7 @@ class _ProductListState extends State<ProductList> {
         children: categoryList
             .asMap()
             .entries
-            .map((singleType) => _diffSizeOfShoes(singleType.key))
+            .map((singleType) => genderType(singleType.key))
             .toList());
 //      children: <Widget>[
 //        RaisedButton(
@@ -140,7 +138,7 @@ class _ProductListState extends State<ProductList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Ladhiif",
+        Text("Welcome",
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 letterSpacing: 3.6,
@@ -156,57 +154,7 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
-  Widget _userProfilePic() {
-    return Container(
-      width: 70,
-      height: 90,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: Color(0xff18171b)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Container(
-              padding: EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Color(0Xff111112),
-              ),
-              child: Text(
-                "9",
-                style: TextStyle(color: Colors.white),
-              )),
-          Icon(Icons.shopping_cart, color: Colors.white),
-          Text(
-            '67 Rs',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          )
-        ],
-      ),
-    );
-  }
 
-//  Widget listViewWidget(var productModel) {
-//    return ListView.builder(
-//        scrollDirection: Axis.horizontal,
-//        physics: BouncingScrollPhysics(),
-//        itemCount: productModel.length,
-//        itemBuilder: (BuildContext context, int index) {
-//
-//          if (productModel[index].male != null && productModel[index].male == categoryType) {
-//            return SlideCard(
-//              productModel: productModel[index],
-//            );
-//
-//          } else if (productModel[index].female != null && productModel[index].female == categoryType) {
-//            return SlideCard(
-//              productModel: productModel[index],
-//            );
-//
-//          } else {
-//            return Text(" ");
-//          }
-//        });
-//  }
 
   Widget listViewWidget(var productModel) {
     return ListView.builder(

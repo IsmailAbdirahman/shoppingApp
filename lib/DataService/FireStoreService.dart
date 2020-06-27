@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:ladhiifshopj/DataModel/OrderedModel.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
 import 'package:ladhiifshopj/DataModel/UserModel.dart';
@@ -62,13 +63,7 @@ class FireStoreService {
   }
 
 //------------------------------------------------------------------------------------------------//
-  // store images and price in firestore  ADMIN
-//  Future updateProductImageAndPrice(String image, String price) async {
-//    return await productData.document(uid).setData({
-//      'image': image,
-//      'price': price,
-//    });
-//  }
+
 
   // Product list from snapshot  ADMIN
   List<ProductModel> _productListFromSnapShot(QuerySnapshot snapshot) {
@@ -79,9 +74,11 @@ class FireStoreService {
           women: doc.data['Women'],
           productName: doc.data['nameOfProduct'],
           productDescription: doc.data['descriptionOfProduct'],
+          avSize: List.from(doc['avSizes']),
           productImage: doc.data['image']);
     }).toList();
   }
+
 
 // get brew streams   ADMIN
   Stream<List<ProductModel>> get productStream {
