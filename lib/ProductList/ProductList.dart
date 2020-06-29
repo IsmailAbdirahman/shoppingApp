@@ -6,6 +6,7 @@ import 'package:ladhiifshopj/DataModel/ProductModel.dart';
 import 'package:ladhiifshopj/ProductList/SearchProduct.dart';
 import 'package:provider/provider.dart';
 
+
 import '../ConfigScreen.dart';
 
 class ProductList extends StatefulWidget {
@@ -144,7 +145,7 @@ class _ProductListState extends State<ProductList> {
                 letterSpacing: 3.6,
                 color: Colors.white,
                 fontSize: 28)),
-        Text("Shop",
+        Text("",
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 letterSpacing: 1.2,

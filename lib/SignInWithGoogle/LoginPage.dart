@@ -13,9 +13,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 240, 240, 240),
+      backgroundColor: Color(0Xff24202b),
       body: Container(
-        color: Colors.white,
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -26,22 +25,10 @@ class _LoginPageState extends State<LoginPage> {
                 margin: EdgeInsets.only(top: 2),
                 padding: EdgeInsets.all(2),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(70),
-                  color: Color.fromARGB(255, 238, 238, 238),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(10, 10),
-                      color: Color.fromARGB(80, 0, 0, 0),
-                      blurRadius: 10,
-                    ),
-                    BoxShadow(
-                        offset: Offset(-10, -10),
-                        color: Color.fromARGB(150, 255, 255, 255),
-                        blurRadius: 10)
-                  ],
+                  color: Color(0Xff2b3144),
+
                 ),
                 child: FlatButton(
-                  splashColor: Colors.blueAccent,
                   onPressed: ()  {
                     signInWithGoogle().whenComplete(() {
                       Navigator.of(context).push(
@@ -66,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                             'Sign in with Google',
                             style: TextStyle(
                               fontSize: 20,
-                              color: Colors.blueAccent,
+                              color: Colors.white70,
                             ),
                           ),
                         )

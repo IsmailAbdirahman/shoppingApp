@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ladhiifshopj/DataService/FireStoreService.dart';
+import 'package:ladhiifshopj/OrderedList/ToastWidget.dart';
 import 'package:ladhiifshopj/SignInWithGoogle/SignInWithGoogle.dart';
+import 'package:oktoast/oktoast.dart';
 
 class AlertDailogForPhoneAndLocation extends StatefulWidget {
   FireStoreService fireStoreService = FireStoreService();
@@ -57,7 +59,12 @@ class _AlertDailogForPhoneAndLocationState
                     onPressed: () {
                       if (locationEditingController.text == "" &&
                           phoneEditingController.text == "") {
-                        print("please fill the blanks");
+                        showToastWidget(
+                            ToastWidget(
+                              succussOrderedIcon: Icons.file_upload,
+                              description: 'Please fill the information',
+                            ),
+                            duration: Duration(seconds: 3));
                       } else {
                         fireStoreService.updateLocationAndPhoneNo(
                             locationEditingController.text,

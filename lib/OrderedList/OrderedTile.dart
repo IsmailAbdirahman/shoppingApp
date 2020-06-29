@@ -33,14 +33,7 @@ class OrderedTile extends StatelessWidget {
               fontSize: 13.0,
             ),
           ),
-//            onTap: () {
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                  builder: (context) => DetailScreen(productModel: productModel ),
-//                ),
-//              );
-//            },
+
 
 
 

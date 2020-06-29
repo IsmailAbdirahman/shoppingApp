@@ -53,7 +53,8 @@ class OrderSlideCard extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.all(50),
+            padding: const EdgeInsets.only(
+                left: 50, right: 50, top: 50, bottom: 100),
             width: 380,
             height: 390,
             child: ClipRRect(
@@ -99,9 +100,9 @@ class OrderSlideCard extends StatelessWidget {
             bottom: 12,
             left: 260,
             child: Container(
-              height: 50,
+              height: 43,
               width: 115,
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.only(left: 20, right: 15, top: 15),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Color(0xff18171b)),
@@ -113,17 +114,51 @@ class OrderSlideCard extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 12,
-            left: 20,
+            bottom: 62,
+            left: 260,
             child: Container(
-              height: 50,
+              height: 43,
               width: 115,
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.only(left: 20, right: 15, top: 15),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Color(0xff18171b)),
               child: Text(
                 'Quanity:' ' ' '${orderedModel.quantity}',
+                style:
+                    TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 12,
+            left: 9,
+            child: Container(
+              height: 43,
+              width: 165,
+              padding: const EdgeInsets.only(left: 20, right: 15, top: 15),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xff18171b)),
+              child: Text(
+                'Name:' ' ' '${orderedModel.nameOfShoe}',
+                style:
+                    TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 62,
+            left: 9,
+            child: Container(
+              height: 43,
+              width: 115,
+              padding: const EdgeInsets.only(left: 20, right: 15, top: 15),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xff18171b)),
+              child: Text(
+                'Size:' ' ' '${orderedModel.sizeOfShoe}',
                 style:
                     TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
               ),

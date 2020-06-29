@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
 import 'package:ladhiifshopj/DataModel/UserModel.dart';
 import 'package:ladhiifshopj/DataService/FireStoreService.dart';
+import 'package:ladhiifshopj/OrderedList/ToastWidget.dart';
 import 'package:ladhiifshopj/SignInWithGoogle/AlertDailogForPhoneAndLocation.dart';
-import 'package:ladhiifshopj/SignInWithGoogle/SignInWithGoogle.dart';
-import 'package:ladhiifshopj/Wrapper.dart';
-import 'package:provider/provider.dart';
+import 'package:oktoast/oktoast.dart';
 
 import '../ConfigScreen.dart';
 
@@ -26,10 +25,15 @@ class _DetailScreenState extends State<DetailScreen> {
   // List<String> sizeperShoeList = ['40', '41', '42', '43', '44'];
   String orderedImage = '';
   String orderedPrice = '';
+  String orderedShoeName = '';
+  String orderedShoeSize = '';
   int totalPrice = 0;
   int _counter = 1;
   static int prce = 0;
   int _selectedIndex = 0;
+  String selectedShoeSize = '';
+
+  DateTime now = DateTime.now();
 
 //  Widget _diffSizeOfShoes(int index) {
 //    return GestureDetector(
@@ -97,20 +101,21 @@ class _DetailScreenState extends State<DetailScreen> {
       builder: (BuildContext context, snapshot) {
         UserData userData = snapshot.data;
         if (snapshot.hasData) {
-          return Scaffold(
-
-              backgroundColor: Color(0Xff24202b),
-              body: Stack(
-                children: <Widget>[
-                  imageDetail(),
-                  backButton(context),
-                  increaseAndDecreaseButton(),
-                  priceWidget(),
-                  getIndexOfShoeSizeList(widget.productModel.avSize),
-                  orderButton(userData.location, userData.phone),
-                  //  orderButton(),
-                ],
-              ));
+          return OKToast(
+            child: Scaffold(
+                backgroundColor: Color(0Xff24202b),
+                body: Stack(
+                  children: <Widget>[
+                    imageDetail(),
+                    backButton(context),
+                    increaseAndDecreaseButton(),
+                    priceWidget(),
+                    getIndexOfShoeSizeList(widget.productModel.avSize),
+                    orderButton(userData.location, userData.phone),
+                    //  orderButton(),
+                  ],
+                )),
+          );
         } else {
           return Center(child: CircularProgressIndicator());
         }
@@ -118,13 +123,15 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  orderedItem(String image, String price) async {
+  orderedItem(
+      String image, String price, String nameOfShoe, String sizeOfShoe) async {
+    String orderedDate = now.day.toString() + "-" + now.month.toString() + "-" + now.year.toString() + " " + now.hour.toString()+":"+now.minute.toString();
     totalPrice = _counter * int.parse(price);
 
-    await dataBaseService.orderedProduct(
-        image, totalPrice.toString(), _counter.toString(), false);
-    await dataBaseService.myOrders(
-        image, totalPrice.toString(), _counter.toString(), false);
+    await dataBaseService.orderedProduct(image, totalPrice.toString(),
+        _counter.toString(), false, nameOfShoe, selectedShoeSize,orderedDate);
+    await dataBaseService.myOrders(image, totalPrice.toString(),
+        _counter.toString(), false, nameOfShoe, selectedShoeSize,orderedDate);
   }
 
   Widget imageDetail() {
@@ -264,14 +271,13 @@ class _DetailScreenState extends State<DetailScreen> {
             .toList());
   }
 
-
   Widget _buildSHoeSize(int index) {
     return GestureDetector(
       onTap: () {
         setState(() {
           _selectedIndex = index;
-        //  print("you selected @@@@@@@@@@ ${widget.productModel.avSize[_selectedIndex]}");
-
+          selectedShoeSize = widget.productModel.avSize[_selectedIndex];
+          print("you selected @@@@@@@@@@ $selectedShoeSize");
         });
       },
       child: Container(
@@ -313,12 +319,27 @@ class _DetailScreenState extends State<DetailScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => AlertDailogForPhoneAndLocation()));
+          } else if (selectedShoeSize == '') {
+            showToastWidget(
+                ToastWidget(
+                  noSuccussOrderedIcon: Icons.undo,
+                  description: 'Please select a size',
+                ),
+                duration: Duration(seconds: 2));
           } else {
             orderedImage = widget.productModel.productImage;
             orderedPrice = widget.productModel.productPrice;
-            await orderedItem(orderedImage, orderedPrice);
-
-            Navigator.pop(context);
+            orderedShoeName = widget.productModel.productName;
+            orderedShoeSize = selectedShoeSize;
+            await orderedItem(
+                orderedImage, orderedPrice, orderedShoeName, orderedShoeSize);
+            showToastWidget(
+                ToastWidget(
+                  succussOrderedIcon: Icons.check,
+                  description: 'Thank you for shopping with us',
+                ),
+                duration: Duration(seconds: 3));
+            // Navigator.pop(context);
           }
         },
         child: Text(
