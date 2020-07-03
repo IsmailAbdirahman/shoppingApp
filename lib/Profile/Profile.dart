@@ -62,6 +62,8 @@ class _ProfileState extends State<Profile> {
         : CircularProgressIndicator();
   }
 
+
+  //----------------------------------- shitty Code ----------------------------
   bool _isEditingText = false;
   String nameBeforeUpdate;
 
@@ -70,7 +72,7 @@ class _ProfileState extends State<Profile> {
       return Container(
         width: 350,
         height: 60,
-        margin: const EdgeInsets.only(left: 20),
+        margin: const EdgeInsets.only(left: 20,right: 20),
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: Color(0xff18171b)),
@@ -131,7 +133,7 @@ class _ProfileState extends State<Profile> {
         child: Container(
           width: 350,
           height: 60,
-          margin: const EdgeInsets.only(left: 20),
+          margin: const EdgeInsets.only(left: 20,right: 20),
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -192,7 +194,7 @@ class _ProfileState extends State<Profile> {
       return Container(
         width: 350,
         height: 60,
-        margin: const EdgeInsets.only(left: 20),
+        margin: const EdgeInsets.only(left: 20,right: 20),
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: Color(0xff18171b)),
@@ -225,7 +227,7 @@ class _ProfileState extends State<Profile> {
         child: Container(
           width: 350,
           height: 60,
-          margin: const EdgeInsets.only(left: 20),
+          margin: const EdgeInsets.only(left: 20,right: 20),
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),

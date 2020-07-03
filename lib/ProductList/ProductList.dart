@@ -5,8 +5,6 @@ import 'package:ladhiifshopj/ProductList/DetailScreen.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
 import 'package:ladhiifshopj/ProductList/SearchProduct.dart';
 import 'package:provider/provider.dart';
-
-
 import '../ConfigScreen.dart';
 
 class ProductList extends StatefulWidget {
@@ -92,7 +90,11 @@ class _ProductListState extends State<ProductList> {
 
   Widget searchBar(BuildContext context, var searchProductName) {
     return IconButton(
-      icon: Icon(Icons.search,color: Colors.white70,size: 27,),
+      icon: Icon(
+        Icons.search,
+        color: Colors.white70,
+        size: 27,
+      ),
       onPressed: () {
         showSearch(
             context: context,
@@ -109,30 +111,7 @@ class _ProductListState extends State<ProductList> {
             .entries
             .map((singleType) => genderType(singleType.key))
             .toList());
-//      children: <Widget>[
-//        RaisedButton(
-//          onPressed: () {
-//            setState(() {
-//              categoryType = "male";
-//            });
-//          },
-//          child: Text(
-//            "Male",
-//            style: TextStyle(color: Colors.white),
-//          ),
-//        ),
-//        RaisedButton(
-//          onPressed: () {
-//            setState(() {
-//              categoryType = "female";
-//            });
-//          },
-//          child: Text(
-//            "female",
-//            style: TextStyle(color: Colors.white),
-//          ),
-//        ),
-//      ],
+
   }
 
   Widget _theShopNameWidget() {
@@ -155,8 +134,6 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
-
-
   Widget listViewWidget(var productModel) {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -167,12 +144,10 @@ class _ProductListState extends State<ProductList> {
             return SlideCard(
               productModel: productModel[index],
             );
-
           } else if (productModel[index].women == categoryType) {
             return SlideCard(
               productModel: productModel[index],
             );
-
           } else {
             return Text(" ");
           }
@@ -200,63 +175,76 @@ class SlideCard extends StatelessWidget {
                       userID: userID.uid,
                     )));
       },
-      child: Stack(
-        children: <Widget>[
-          Hero(
-            tag: productModel.productImage,
-            child: Container(
+      child: Container(
+        // height: SizeConfig.blockSizeVertical *10,
+        width: SizeConfig.blockSizeHorizontal * 80,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 40,bottom: 20),
+          child: Card(
+            color: Color(0xff18171b),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                priceWidget(),
+                Expanded(child: imageWidget()),
+                // Text("kakakaka",style: TextStyle(color: Colors.white),),
+                nameWidget(),
 
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Color(0xff18171b),
-              ),
-              margin: const EdgeInsets.only(
-                  top: 30, bottom: 20, left: 20, right: 20),
-              padding: const EdgeInsets.only(
-                  top: 40, right: 40, left: 40, bottom: 40),
-              width: SizeConfig.blockSizeHorizontal *88,
-              height: SizeConfig.blockSizeVertical *60,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30.0),
-                child: Image(
-                  image: NetworkImage(productModel.productImage),
-                ),
-              ),
+              ],
             ),
           ),
-          // Text("kakakaka",style: TextStyle(color: Colors.white),),
-          Positioned(
-            bottom: 350,
-            left: 66,
-            child: Container(
-              height: SizeConfig.blockSizeVertical *8,
-              width: SizeConfig.blockSizeHorizontal *15,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0Xff1b1a1b)),
-              child: Text(
-                '\$' '${productModel.productPrice}',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 30,
-            left: 66,
-            child: Container(
-              padding: const EdgeInsets.all(15),
-              child: Text(
-                '${productModel.productName}',
-                style: TextStyle(
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 1.3),
-              ),
-            ),
-          ),
-        ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget priceWidget(){
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        height: SizeConfig.blockSizeVertical * 6.5,
+        width: SizeConfig.blockSizeHorizontal * 15,
+        padding: const EdgeInsets.all(17),
+        margin: const EdgeInsets.only(left: 8,top: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0Xff24202b)),
+        child: Text(
+          '\$' '${productModel.productPrice}',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+  }
+  Widget imageWidget(){
+    return Hero(
+      tag: productModel.productImage,
+      child: Container(
+//          height: SizeConfig.screenHeight = 107,
+//          width: SizeConfig.blockSizeHorizontal * 66,
+        child: Image(
+          image: NetworkImage(productModel.productImage),
+
+        ),
+      ),
+    );
+  }
+  Widget nameWidget(){
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        child: Text(
+          '${productModel.productName}',
+          style: TextStyle(
+              color: Colors.white70,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 1.3),
+        ),
       ),
     );
   }

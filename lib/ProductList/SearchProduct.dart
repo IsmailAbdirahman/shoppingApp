@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
 import 'package:ladhiifshopj/ProductList/ProductList.dart';
+import '../ConfigScreen.dart';
+
 
 class SearchProduct extends SearchDelegate {
   final List<ProductModel> searchProductName;
@@ -14,6 +16,7 @@ class SearchProduct extends SearchDelegate {
     assert(theme != null);
     return theme.copyWith(
       primaryColor: Color(0Xff24202b),
+      backgroundColor: Colors.black,
     );
   }
 
@@ -77,7 +80,6 @@ class SearchProduct extends SearchDelegate {
             .toList();
     return Container(
       color: Color(0Xff24202b),
-      width: 500,
       child: ListView.builder(
           primary: false,
           itemCount: suggestionList.length,

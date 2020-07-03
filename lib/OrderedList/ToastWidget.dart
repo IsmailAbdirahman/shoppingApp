@@ -13,7 +13,7 @@ class ToastWidget extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0Xff24202b),
       body: Padding(
-        padding: const EdgeInsets.all(40),
+        padding: const EdgeInsets.all(20),
         child: Align(
           alignment: Alignment.center,
           child: ClipRRect(
@@ -35,12 +35,15 @@ class ToastWidget extends StatelessWidget {
                     color: Colors.greenAccent,
                     size: 70,
                   ),
-                  Text(
-                    description,
-                    style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10,right: 10),
+                    child: Text(
+                      description,
+                      style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500),
+                    ),
                   )
                 ],
               ),

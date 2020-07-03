@@ -64,7 +64,7 @@ class homeState extends State<DisplayData> {
           title: SizedBox.shrink(),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search),
+          icon: Icon(Icons.person),
           title: SizedBox.shrink(),
         ),
       ],
