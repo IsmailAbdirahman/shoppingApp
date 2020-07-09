@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ladhiifshopj/DataService/FireStoreService.dart';
 import 'package:ladhiifshopj/OrderedList/OrderedList.dart';
-import 'package:ladhiifshopj/OrderedList/OrderedTile.dart';
 import 'package:ladhiifshopj/ProductList/ProductList.dart';
+import 'package:ladhiifshopj/Profile/Profile.dart';
 import 'package:provider/provider.dart';
-import 'DataModel/ProductModel.dart';
 import 'DataModel/UserInfoModel.dart';
+import 'SignInWithGoogle/SignInWithGoogle.dart';
 
 class DisplayData extends StatefulWidget {
   DisplayData({Key key}) : super(key: key);
@@ -18,13 +17,15 @@ class DisplayData extends StatefulWidget {
 }
 
 class homeState extends State<DisplayData> {
-  UserInfoModel userInfoModel = UserInfoModel();
+
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
+
     ProductList(),
     OrderedList(),
+    StreamProvider<UserModel>.value(
+        value: user,
+        child: Profile())
   ];
 
   void _onItemTapped(int index) {
@@ -34,16 +35,9 @@ class homeState extends State<DisplayData> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<ProductModel>>.value(
-      value: FireStoreService().productStream,
-      child: Scaffold(
-          backgroundColor: Color(0Xff24202b),
+    return Scaffold(
+        backgroundColor: Color(0Xff24202b),
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
@@ -52,11 +46,8 @@ class homeState extends State<DisplayData> {
               topRight: Radius.circular(30),
               topLeft: Radius.circular(30),
             ),
-            child: getBottomNavigationBar())
-      ),
-    );
+            child: getBottomNavigationBar()));
   }
-
 
   Widget getBottomNavigationBar() {
     return BottomNavigationBar(
@@ -73,7 +64,7 @@ class homeState extends State<DisplayData> {
           title: SizedBox.shrink(),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search),
+          icon: Icon(Icons.person),
           title: SizedBox.shrink(),
         ),
       ],
@@ -82,17 +73,4 @@ class homeState extends State<DisplayData> {
       onTap: _onItemTapped,
     );
   }
-
-
-//  // getTheMessage returns "Hello, I am From Future" after 10 seconds
-//
-//  printMessage() async {
-//    String messageFromFuture = await getMessage();
-//    print(messageFromFuture);
-//  }
-//
-//  Future<String> getMessage() async {
-//    await Future.delayed(Duration(seconds: 10));
-//    return "Hello, I am From Future";
-//  }
 }

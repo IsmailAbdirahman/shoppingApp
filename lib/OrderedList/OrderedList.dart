@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ladhiifshopj/ConfigScreen.dart';
 import 'package:ladhiifshopj/DataModel/OrderedModel.dart';
 import 'package:ladhiifshopj/DataModel/UserInfoModel.dart';
 import 'package:ladhiifshopj/DataService/FireStoreService.dart';
-import 'package:ladhiifshopj/ProductList/DetailScreen.dart';
 import 'package:provider/provider.dart';
-import 'OrderedTile.dart';
+import '../ConfigScreen.dart';
 
 class OrderedList extends StatefulWidget {
   @override
@@ -25,6 +25,7 @@ class OrderedListState extends State<OrderedList> {
             return Container(
               margin: EdgeInsets.all(4.0),
               child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 itemCount: orderedModel.length,
                 itemBuilder: (context, index) {
@@ -40,93 +41,102 @@ class OrderedListState extends State<OrderedList> {
 }
 
 class OrderSlideCard extends StatelessWidget {
-  // final String imageUrl, price, name, type;
   final OrderedModel orderedModel;
 
   OrderSlideCard({this.orderedModel});
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return GestureDetector(
-      onTap: null,
-      child: Stack(
+        onTap: null,
+        child: Container(
+            height: 320,
+            child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                color: Color(0xff18171b),
+                elevation: 0,
+                child: GestureDetector(
+                  onTap: null,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      statusWidget(orderedModel),
+                      imageWidget(orderedModel),
+                      nameAndQuantityWidgets(orderedModel),
+                      sizeAndTotalPriceWidgets(orderedModel)
+                    ],
+                  ),
+                ))));
+  }
+
+  Widget statusWidget(OrderedModel orderedModel) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 17, left: 17, top: 10),
+      child: Row(
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(50),
-            width: 380,
-            height: 390,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30.0),
-              child: Image(
-                image: NetworkImage(orderedModel.orderedImage),
-              ),
-            ),
+          Text(
+            "Status: ",
+            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w800),
           ),
-          Divider(
-            thickness: 15,
-          ),
-          Positioned(
-            bottom: 330,
-            left: 10,
-            child: Text(
-              'Status:',
-              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
-            ),
-          ),
-          Positioned(
-            bottom: 322,
-            left: 60,
-            child: Container(
-                height: 30,
-                width: 50,
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color(0xff18171b)),
-                child:orderedModel.isDelivered!=null && orderedModel.isDelivered? Icon(
-                  Icons.shopping_basket,
-                  color: Colors.greenAccent,
-                ):Icon(
-                  Icons.local_shipping,
-                  color: Colors.deepOrange,
-                )),
-          ),
-          Positioned(
-            bottom: 12,
-            left: 260,
-            child: Container(
-              height: 50,
-              width: 115,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0xff18171b)),
-              child: Text(
-                'Total:' ' ' '\$' '${orderedModel.orderedPrice}',
-                style:
-                    TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 12,
-            left: 20,
-            child: Container(
-              height: 50,
-              width: 115,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0xff18171b)),
-              child: Text(
-                'Quanity:' ' ' '${orderedModel.quantity}',
-                style:
-                    TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
-              ),
-            ),
+          orderedModel.isDelivered == false
+              ? Icon(
+            Icons.local_shipping,
+            color: Colors.deepOrange,
+          )
+              : Icon(
+            Icons.shopping_basket,
+            color: Colors.greenAccent,
           ),
         ],
       ),
     );
   }
+
+  Widget imageWidget(OrderedModel orderedModel) {
+    return Container(
+        height: SizeConfig.blockSizeVertical * 20,
+        width: SizeConfig.blockSizeHorizontal * 55,
+        child: Image.network(orderedModel.orderedImage));
+  }
+
+  Widget nameAndQuantityWidgets(OrderedModel orderedModel) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 17, left: 17),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            "Name: ${orderedModel.nameOfShoe}",
+            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w800),
+          ),
+          Text("quantity: ${orderedModel.quantity}",
+              style:
+              TextStyle(fontWeight: FontWeight.w800, color: Colors.white70)),
+        ],
+      ),
+    );
+  }
+
+  Widget sizeAndTotalPriceWidgets(OrderedModel orderedModel) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 17, left: 17),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            "Size: ${orderedModel.sizeOfShoe}",
+            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w800),
+          ),
+          Text("Total:  \$${orderedModel.orderedPrice}",
+              style:
+              TextStyle(fontWeight: FontWeight.w800, color: Colors.white70)),
+        ],
+      ),
+    );
+  }
+
 }
+

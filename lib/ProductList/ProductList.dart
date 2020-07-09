@@ -1,82 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ladhiifshopj/DataModel/UserInfoModel.dart';
+import 'package:ladhiifshopj/DataService/FireStoreService.dart';
 import 'package:ladhiifshopj/ProductList/DetailScreen.dart';
-import 'package:ladhiifshopj/ProductList/ProductTile.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
+import 'package:ladhiifshopj/ProductList/SearchProduct.dart';
 import 'package:provider/provider.dart';
-
-//
-//class ProductList extends StatefulWidget {
-//  @override
-//  _BrewListState createState() => _BrewListState();
-//}
-//
-//class _BrewListState extends State<ProductList> {
-//  @override
-//  Widget build(BuildContext context) {
-//    final productModel = Provider.of<List<ProductModel>>(context);
-//
-//    return MaterialApp(
-//      debugShowCheckedModeBanner: false,
-//      home: productModel != null
-//          ? Scaffold(
-//              backgroundColor: Color(0xFF7A9BEE),
-//              body: ListView(
-//                children: <Widget>[
-//                  SizedBox(
-//                    height: 75.0,
-//                  ),
-//                  Padding(
-//                      padding: EdgeInsets.only(left: 40.0),
-//                      child: Row(
-//                        children: <Widget>[
-//                          Text(
-//                            'Ladhiif',
-//                            style: TextStyle(
-//                              fontFamily: 'montserrat',
-//                              color: Colors.white,
-//                              fontSize: 25.0,
-//                              fontWeight: FontWeight.bold,
-//                            ),
-//                          ),
-//                          SizedBox(
-//                            width: 10.0,
-//                          ),
-//                          Text(
-//                            'Shop',
-//                            style: TextStyle(
-//                              fontFamily: 'montserrat',
-//                              color: Colors.white,
-//                              fontSize: 25.0,
-//                            ),
-//                          ),
-//                        ],
-//                      )),
-//                  SizedBox(
-//                    height: 40,
-//                  ),
-//                  Container(
-//                    height: MediaQuery.of(context).size.height - 185.0,
-//                    decoration: BoxDecoration(
-//                        color: Colors.white,
-//                        borderRadius:
-//                            BorderRadius.only(topLeft: Radius.circular(75.0))),
-//                    child: ListView.builder(
-//                      primary: false,
-//                      padding: EdgeInsets.only(left: 25.0, right: 20.0),
-//                      shrinkWrap: true,
-//                      physics: ScrollPhysics(),
-//                      itemCount: productModel.length,
-//                      itemBuilder: (context, index) {
-//                        return ProductTile(productModel: productModel[index]);
-//                      },
-//                    ),
-//                  ),
-//                ],
-//              ))
-//          : Scaffold(body: Center(child: CircularProgressIndicator())),
-//    );
-//  }
-//}
+import '../ConfigScreen.dart';
 
 class ProductList extends StatefulWidget {
   @override
@@ -84,45 +13,118 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
-  @override
-  Widget build(BuildContext context) {
-    final productModel = Provider.of<List<ProductModel>>(context);
+  static String categoryType;
+  int _selectedIndex = 0;
+  List<ProductModel> male;
+  List<ProductModel> female;
+  List<String> categoryList = ['Men', 'Women'];
 
-    return productModel != null
-        ? Scaffold(
-            backgroundColor: Color(0Xff24202b),
-            body: Container(
-              margin: EdgeInsets.only(top: 90),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      _theShopNameWidget(),
-                      _userProfilePic(),
-                    ],
-                  ),
-                  Expanded(
-                    child: listViewWidget(productModel),
-                  )
-                ],
+  Widget genderType(int index) {
+    print("OUTSIDE ${categoryList[index]}");
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+          categoryType = categoryList[index];
+          print("INSIDE MALE ${categoryType}");
+        });
+      },
+      child: Container(
+          margin: const EdgeInsets.only(top: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(60.0),
+          ),
+          child: OutlineButton(
+            disabledBorderColor: Colors.grey,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            onPressed: null,
+            child: Text(
+              categoryList[index],
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+                color: _selectedIndex == index ? Colors.white : Colors.grey,
               ),
             ),
-          )
-        : CircularProgressIndicator();
+          )),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<ProductModel>>(
+        stream: FireStoreService().productStream,
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasData) {
+            List<ProductModel> productModel = snapshot.data;
+
+            return SafeArea(
+              child: Scaffold(
+                backgroundColor: Color(0Xff24202b),
+                body: Container(
+                  margin: EdgeInsets.only(top: 90),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          _theShopNameWidget(),
+                          searchBar(context, productModel),
+                        ],
+                      ),
+                      categories(),
+                      Expanded(
+                        child: listViewWidget(productModel),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
+  }
+
+  Widget searchBar(BuildContext context, var searchProductName) {
+    return IconButton(
+      icon: Icon(
+        Icons.search,
+        color: Colors.white70,
+        size: 27,
+      ),
+      onPressed: () {
+        showSearch(
+            context: context,
+            delegate: SearchProduct(searchProductName: searchProductName));
+      },
+    );
+  }
+
+  Widget categories() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: categoryList
+            .asMap()
+            .entries
+            .map((singleType) => genderType(singleType.key))
+            .toList());
+
   }
 
   Widget _theShopNameWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Ladhiif",
+        Text("Welcome",
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 letterSpacing: 3.6,
                 color: Colors.white,
                 fontSize: 28)),
-        Text("Shop",
+        Text("",
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 letterSpacing: 1.2,
@@ -132,99 +134,117 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
-  Widget _userProfilePic() {
-    return Container(
-      width: 70,
-      height: 90,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: Color(0xff18171b)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Container(
-              padding: EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Color(0Xff111112),
-              ),
-              child: Text(
-                "9",
-                style: TextStyle(color: Colors.white),
-              )),
-          Icon(Icons.shopping_cart, color: Colors.white),
-          Text(
-            '67 Rs',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget listViewWidget(var productModell) {
+  Widget listViewWidget(var productModel) {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: productModell.length,
-        itemBuilder: (_, int index) {
-          return SlideCard(
-            productModel: productModell[index],
-          );
+        physics: BouncingScrollPhysics(),
+        itemCount: productModel.length,
+        itemBuilder: (BuildContext context, int index) {
+          if (productModel[index].men == categoryType) {
+            return SlideCard(
+              productModel: productModel[index],
+            );
+          } else if (productModel[index].women == categoryType) {
+            return SlideCard(
+              productModel: productModel[index],
+            );
+          } else {
+            return Text(" ");
+          }
         });
   }
 }
 
 class SlideCard extends StatelessWidget {
-  // final String imageUrl, price, name, type;
   final ProductModel productModel;
 
   SlideCard({this.productModel});
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
+    final userID = Provider.of<UserModel>(context);
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    DetailScreen(productModel: productModel)));
+                builder: (context) => DetailScreen(
+                      productModel: productModel,
+                      userID: userID.uid,
+                    )));
       },
-      child: Stack(
-        children: <Widget>[
-          Hero(
-            tag: productModel.productImage,
-            child: Container(
-              padding:
-                  const EdgeInsets.only(top: 15, right: 20, left: 30, bottom: 20),
-              width: 380,
-              height: 590,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30.0),
-                child: Image(
-                  image: NetworkImage(productModel.productImage),
-                ),
-              ),
+      child: Container(
+        // height: SizeConfig.blockSizeVertical *10,
+        width: SizeConfig.blockSizeHorizontal * 80,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 40,bottom: 20),
+          child: Card(
+            color: Color(0xff18171b),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                priceWidget(),
+                Expanded(child: imageWidget()),
+                // Text("kakakaka",style: TextStyle(color: Colors.white),),
+                nameWidget(),
+
+              ],
             ),
           ),
-         // Text("kakakaka",style: TextStyle(color: Colors.white),),
-          Positioned(
-            bottom: 297,
-            left: 66,
-            child: Container(
-              height: 55,
-              width: 55,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0xff18171b)),
-              child: Text(
-                '\$' '${productModel.productPrice}',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-        ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget priceWidget(){
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        height: SizeConfig.blockSizeVertical * 6.5,
+        width: SizeConfig.blockSizeHorizontal * 15,
+        padding: const EdgeInsets.all(17),
+        margin: const EdgeInsets.only(left: 8,top: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0Xff24202b)),
+        child: Text(
+          '\$' '${productModel.productPrice}',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+  }
+  Widget imageWidget(){
+    return Hero(
+      tag: productModel.productImage,
+      child: Container(
+//          height: SizeConfig.screenHeight = 107,
+//          width: SizeConfig.blockSizeHorizontal * 66,
+        child: Image(
+          image: NetworkImage(productModel.productImage),
+
+        ),
+      ),
+    );
+  }
+  Widget nameWidget(){
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        child: Text(
+          '${productModel.productName}',
+          style: TextStyle(
+              color: Colors.white70,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 1.3),
+        ),
       ),
     );
   }

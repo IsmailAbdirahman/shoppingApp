@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-
 import 'DataModel/UserInfoModel.dart';
 import 'DisplayData.dart';
 import 'SignInWithGoogle/LoginPage.dart';

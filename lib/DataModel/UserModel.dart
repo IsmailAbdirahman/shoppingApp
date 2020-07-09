@@ -1,8 +1,10 @@
-class UserModel {
-  final String uid;
+//class UserModel {
+//  final String uid;
+//
+//  UserModel({this.uid});
+//}
+//;;;
 
-  UserModel({this.uid});
-}
 
 class UserData {
   final String uid;
