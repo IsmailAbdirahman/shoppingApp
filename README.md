@@ -2,7 +2,7 @@
 
 It is an Online Shoe shop.
 
-Stacks:
+Stack:
 Flutter + Firestore
 
 
