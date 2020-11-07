@@ -6,7 +6,7 @@ class OrderedModel {
   final String nameOfShoe;
   final String sizeOfShoe;
   final String orderedDate;
-
+//con
   OrderedModel({this.orderedImage,
     this.orderedPrice,
     this.quantity,
