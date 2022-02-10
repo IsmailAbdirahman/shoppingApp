@@ -4,28 +4,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:ladhiifshopj/DataModel/OrderedModel.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
 import 'package:ladhiifshopj/DataModel/UserModel.dart';
+import 'package:ladhiifshopj/utils/user_auth.dart';
 
 class FireStoreService {
   final CollectionReference productData =
-      Firestore.instance.collection('product');
+      FirebaseFirestore.instance.collection('product');
   final CollectionReference userData =
-      Firestore.instance.collection('userData');
+      FirebaseFirestore.instance.collection('userData');
   final CollectionReference orderedData =
-      Firestore.instance.collection('orderedData');
+      FirebaseFirestore.instance.collection('orderedData');
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String orderIdNowDateTime = new DateTime.now().toString();
-  final String uid;
-  String nameOfCustomer;
-  String phoneOfCustomer;
-  String locationOfCustomer;
-  String phoneNumber;
 
-  FireStoreService({this.uid});
+  // final String uid;
+  String? nameOfCustomer;
+  String? phoneOfCustomer;
+  String? locationOfCustomer;
+  String? phoneNumber;
+
+  //FireStoreService({this.uid});
 
   Future userInformation(String name, String email, String imageUrl,
       String useruid, String location, String phoneNumber) async {
-    final FirebaseUser user = await _auth.currentUser();
-    return await userData.document(user.uid).setData({
+    return await userData.doc(currentUserInfo!.uid).set({
       'name': name,
       'phone': email,
       'imageurl': imageUrl,
@@ -36,45 +37,47 @@ class FireStoreService {
   }
 
   Future updateUserInformation(
-      {String name, String location, String phoneNumber}) async {
-    final FirebaseUser user = await _auth.currentUser();
-    return await userData.document(user.uid).updateData(
+      {String? name, String? location, String? phoneNumber}) async {
+    final User? userInfo = userAuth.currentUser;
+    return await userData.doc(userInfo!.uid).update(
         {'name': name, 'location': location, 'phoneNumber': phoneNumber});
   }
 
   //  Retrive
   UserData _userInfoFromsnapshot(DocumentSnapshot snapshot) {
     return UserData(
-      name: snapshot.data['name'],
-      location: snapshot.data['location'],
-      phone: snapshot.data['phoneNumber'],
+      name: snapshot.get('name'),
+      location: snapshot.get('location'),
+      phone: snapshot.get('phoneNumber'),
     );
   }
 
   Stream<UserData> get userInfo {
-    return userData.document(uid).snapshots().map(_userInfoFromsnapshot);
+    return userData
+        .doc(currentUserInfo!.uid)
+        .snapshots()
+        .map(_userInfoFromsnapshot);
   }
 
   updateLocationAndPhoneNo(String location, String phoneNumber) async {
-    final FirebaseUser user = await _auth.currentUser();
     return await userData
-        .document(user.uid)
-        .updateData({'location': location, 'phoneNumber': phoneNumber});
+        .doc(currentUserInfo!.uid)
+        .update({'location': location, 'phoneNumber': phoneNumber});
   }
 
 //------------------------------------------------------------------------------------------------//
 
   // Product list from snapshot  ADMIN
   List<ProductModel> _productListFromSnapShot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
+    return snapshot.docs.map((doc) {
       return ProductModel(
-          productPrice: doc.data['price'] ?? '',
-          men: doc.data['Men'],
-          women: doc.data['Women'],
-          productName: doc.data['nameOfProduct'],
-          productDescription: doc.data['descriptionOfProduct'],
+          productPrice: doc.get('price') ?? '',
+          men: doc.get('Men'),
+          women: doc.get('Women'),
+          productName: doc.get('nameOfProduct'),
+          productDescription: doc.get('descriptionOfProduct'),
           avSize: List.from(doc['avSizes']),
-          productImage: doc.data['image']);
+          productImage: doc.get('image'));
     }).toList();
   }
 
@@ -85,18 +88,26 @@ class FireStoreService {
 
   //================================================================================================//
   //store order id,ordered name, location and phone
-  Future orderedProduct(String image, String price, String quantity,
-      bool isDelivered, String nameOfShoe, selectedSizeOfShoe,String orderedDate) async {
-    final FirebaseUser user = await _auth.currentUser();
+  Future orderedProduct(
+      String image,
+      String price,
+      String quantity,
+      bool isDelivered,
+      String nameOfShoe,
+      selectedSizeOfShoe,
+      String orderedDate) async {
     // get the information of user and store in orderedData collection
-    await userData.document(user.uid).get().then((DocumentSnapshot snapshot) {
-      nameOfCustomer = snapshot.data['name'];
-      phoneOfCustomer = snapshot.data['phone'];
-      phoneNumber = snapshot.data['phoneNumber'];
-      locationOfCustomer = snapshot.data['location'];
+    await userData
+        .doc(currentUserInfo!.uid)
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      nameOfCustomer = snapshot.get('name');
+      phoneOfCustomer = snapshot.get('phone');
+      phoneNumber = snapshot.get('phoneNumber');
+      locationOfCustomer = snapshot.get('location');
     });
-    return await orderedData.document(orderIdNowDateTime).setData({
-      'userId': user.uid,
+    return await orderedData.doc(orderIdNowDateTime).set({
+      'userId': currentUserInfo!.uid,
       'productId': orderIdNowDateTime,
       'orderedImage': image,
       'orderedPrice': price,
@@ -108,19 +119,18 @@ class FireStoreService {
       'phone': phoneOfCustomer,
       'phoneNumber': phoneNumber,
       'location': locationOfCustomer,
-      'orderedDate':orderedDate,
+      'orderedDate': orderedDate,
     });
   }
 
   //Store data into myOrders collection
   Future myOrders(String image, String price, String quantity, bool isDelivered,
-      String nameOfShoe, selectedSizeOfShoe,String orderedDate) async {
-    final FirebaseUser user = await _auth.currentUser();
+      String nameOfShoe, selectedSizeOfShoe, String orderedDate) async {
     return await userData
-        .document(user.uid)
+        .doc(currentUserInfo!.uid)
         .collection('myOrders')
-        .document(orderIdNowDateTime)
-        .setData({
+        .doc(orderIdNowDateTime)
+        .set({
       'productId': orderIdNowDateTime,
       'orderedImage': image,
       'orderedPrice': price,
@@ -128,28 +138,28 @@ class FireStoreService {
       'nameOfShoe': nameOfShoe,
       'selectedSizeOfShoe': selectedSizeOfShoe,
       'isDelivered': isDelivered,
-      'orderedDate':orderedDate
+      'orderedDate': orderedDate
     });
   }
 
   // get the data as snapshot
   List<OrderedModel> myOrderSnapShot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
+    return snapshot.docs.map((doc) {
       return OrderedModel(
-          orderedImage: doc.data['orderedImage'] ?? '',
-          orderedPrice: doc.data['orderedPrice'],
-          isDelivered: doc.data['isDelivered'],
-          nameOfShoe: doc.data['nameOfShoe'],
-          sizeOfShoe: doc.data['selectedSizeOfShoe'],
-          orderedDate:doc.data['orderedDate'],
-          quantity: doc.data['quantity']);
+          orderedImage: doc.get('orderedImage') ?? '',
+          orderedPrice: doc.get('orderedPrice'),
+          isDelivered: doc.get('isDelivered'),
+          nameOfShoe: doc.get('nameOfShoe'),
+          sizeOfShoe: doc.get('selectedSizeOfShoe'),
+          orderedDate: doc.get('orderedDate'),
+          quantity: doc.get('quantity'));
     }).toList();
   }
 
   // get the snapshot as stream
   Stream<List<OrderedModel>> get orderedStream {
     return userData
-        .document(uid)
+        .doc(currentUserInfo!.uid)
         .collection('myOrders')
         .orderBy('productId', descending: true)
         .snapshots()

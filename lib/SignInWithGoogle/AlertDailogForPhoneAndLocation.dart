@@ -63,10 +63,11 @@ class _AlertDailogForPhoneAndLocationState
                             ToastWidget(
                               succussOrderedIcon: Icons.file_upload,
                               description: 'Please fill the information',
+                              noSuccussOrderedIcon: Icons.file_upload,
                             ),
                             duration: Duration(seconds: 3));
                       } else {
-                        fireStoreService.updateLocationAndPhoneNo(
+                        FireStoreService().updateLocationAndPhoneNo(
                             locationEditingController.text,
                             phoneEditingController.text);
                         Navigator.pop(context);

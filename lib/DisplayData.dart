@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:ladhiifshopj/OrderedList/OrderedList.dart';
 import 'package:ladhiifshopj/ProductList/ProductList.dart';
 import 'package:ladhiifshopj/Profile/Profile.dart';
-import 'package:provider/provider.dart';
 import 'DataModel/UserInfoModel.dart';
 import 'SignInWithGoogle/SignInWithGoogle.dart';
 
 class DisplayData extends StatefulWidget {
-  DisplayData({Key key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -17,15 +14,11 @@ class DisplayData extends StatefulWidget {
 }
 
 class homeState extends State<DisplayData> {
-
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
-
     ProductList(),
     OrderedList(),
-    StreamProvider<UserModel>.value(
-        value: user,
-        child: Profile())
+    Profile()
   ];
 
   void _onItemTapped(int index) {

@@ -13,7 +13,7 @@ class DetailScreen extends StatefulWidget {
   final ProductModel productModel;
   final String userID;
 
-  DetailScreen({this.productModel, this.userID});
+  DetailScreen({required this.productModel, required this.userID});
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -35,41 +35,10 @@ class _DetailScreenState extends State<DetailScreen> {
 
   DateTime now = DateTime.now();
 
-//  Widget _diffSizeOfShoes(int index) {
-//    return GestureDetector(
-//      onTap: () {
-//        setState(() {
-//          _selectedIndex = index;
-//        });
-//      },
-//      child: Container(
-//          height: 50,
-//          width: 50,
-//          margin: EdgeInsets.only(top: 530),
-//          decoration: BoxDecoration(
-//            borderRadius: BorderRadius.circular(60.0),
-//          ),
-//          child: OutlineButton(
-//            disabledBorderColor: Colors.grey,
-//            shape:
-//                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-//            onPressed: null,
-//            child: Text(
-//              sizeperShoeList[index],
-//              style: TextStyle(
-//                fontWeight: FontWeight.w500,
-//                fontSize: 15,
-//                color: _selectedIndex == index ? Colors.white : Colors.grey,
-//              ),
-//            ),
-//          )),
-//    );
-//  }
-
   void _incrementCounter() {
     setState(() {
       _counter++;
-      prce = int.parse(widget.productModel.productPrice) * _counter;
+      prce = int.parse(widget.productModel.productPrice!) * _counter;
     });
   }
 
@@ -79,17 +48,17 @@ class _DetailScreenState extends State<DetailScreen> {
 
       if (_counter < 1) {
         _counter = 1;
-        prce = int.parse(widget.productModel.productPrice);
+        prce = int.parse(widget.productModel.productPrice!);
       }
     });
-    prce = int.parse(widget.productModel.productPrice) * _counter;
+    prce = int.parse(widget.productModel.productPrice!) * _counter;
   }
 
   @override
   void initState() {
     super.initState();
-    prce = int.parse(widget.productModel.productPrice);
-    _selectedIndex = int.parse(widget.productModel.avSize[0]);
+    prce = int.parse(widget.productModel.productPrice!);
+    _selectedIndex = int.parse(widget.productModel.avSize![0]);
   }
 
   @override
@@ -97,22 +66,22 @@ class _DetailScreenState extends State<DetailScreen> {
     SizeConfig().init(context);
 
     return StreamBuilder<UserData>(
-      stream: FireStoreService(uid: widget.userID).userInfo,
+      stream: FireStoreService().userInfo,
       builder: (BuildContext context, snapshot) {
-        UserData userData = snapshot.data;
+        UserData? userData = snapshot.data;
         if (snapshot.hasData) {
           return OKToast(
             child: Scaffold(
                 backgroundColor: Color(0Xff24202b),
                 body: Column(
-                 // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     backButton(context),
                     Expanded(child: imageDetail()),
                     increaseAndDecreaseButton(),
                     priceWidget(),
-                    getIndexOfShoeSizeList(widget.productModel.avSize),
-                    orderButton(userData.location, userData.phone),
+                    getIndexOfShoeSizeList(widget.productModel.avSize!),
+                    orderButton(userData!.location!, userData.phone!),
                   ],
                 )),
           );
@@ -144,12 +113,12 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Widget imageDetail() {
     return Hero(
-      tag: widget.productModel.productImage,
+      tag: widget.productModel.productImage!,
       child: Container(
 //          height: SizeConfig.blockSizeVertical * 19,
 //          width: SizeConfig.blockSizeHorizontal * 100,
         child: Image(
-          image: NetworkImage(widget.productModel.productImage),
+          image: NetworkImage(widget.productModel.productImage!),
         ),
       ),
     );
@@ -288,7 +257,7 @@ class _DetailScreenState extends State<DetailScreen> {
       onTap: () {
         setState(() {
           _selectedIndex = index;
-          selectedShoeSize = widget.productModel.avSize[_selectedIndex];
+          selectedShoeSize = widget.productModel.avSize![_selectedIndex];
         });
       },
       child: Align(
@@ -305,7 +274,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   borderRadius: BorderRadius.circular(10)),
               onPressed: null,
               child: Text(
-                widget.productModel.avSize[index].toString(),
+                widget.productModel.avSize![index].toString(),
                 style: TextStyle(
                   color: _selectedIndex == index ? Colors.white : Colors.grey,
                   fontWeight: FontWeight.w500,
@@ -340,14 +309,15 @@ class _DetailScreenState extends State<DetailScreen> {
             } else if (selectedShoeSize == '') {
               showToastWidget(
                   ToastWidget(
+                    succussOrderedIcon: Icons.undo,
                     noSuccussOrderedIcon: Icons.undo,
                     description: 'Please select a size',
                   ),
                   duration: Duration(seconds: 2));
             } else {
-              orderedImage = widget.productModel.productImage;
-              orderedPrice = widget.productModel.productPrice;
-              orderedShoeName = widget.productModel.productName;
+              orderedImage = widget.productModel.productImage!;
+              orderedPrice = widget.productModel.productPrice!;
+              orderedShoeName = widget.productModel.productName!;
               orderedShoeSize = selectedShoeSize;
               await orderedItem(
                   orderedImage, orderedPrice, orderedShoeName, orderedShoeSize);
@@ -355,6 +325,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   ToastWidget(
                     succussOrderedIcon: Icons.check,
                     description: 'Thank you for shopping with us',
+                    noSuccussOrderedIcon: Icons.check,
                   ),
                   duration: Duration(seconds: 3));
               // Navigator.pop(context);

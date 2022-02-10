@@ -7,7 +7,7 @@ import '../ConfigScreen.dart';
 class SearchProduct extends SearchDelegate {
   final List<ProductModel> searchProductName;
 
-  SearchProduct({this.searchProductName});
+  SearchProduct({required this.searchProductName});
 
   @override
   ThemeData appBarTheme(BuildContext context) {

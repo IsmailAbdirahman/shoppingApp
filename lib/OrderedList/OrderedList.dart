@@ -3,7 +3,6 @@ import 'package:ladhiifshopj/ConfigScreen.dart';
 import 'package:ladhiifshopj/DataModel/OrderedModel.dart';
 import 'package:ladhiifshopj/DataModel/UserInfoModel.dart';
 import 'package:ladhiifshopj/DataService/FireStoreService.dart';
-import 'package:provider/provider.dart';
 import '../ConfigScreen.dart';
 
 class OrderedList extends StatefulWidget {
@@ -14,20 +13,18 @@ class OrderedList extends StatefulWidget {
 class OrderedListState extends State<OrderedList> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserModel>(context);
-
     return StreamBuilder<List<OrderedModel>>(
-        stream: FireStoreService(uid: user.uid).orderedStream,
+        stream: FireStoreService().orderedStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<OrderedModel> orderedModel = snapshot.data;
+            List<OrderedModel>? orderedModel = snapshot.data;
 
             return Container(
               margin: EdgeInsets.all(4.0),
               child: ListView.builder(
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: orderedModel.length,
+                itemCount: orderedModel!.length,
                 itemBuilder: (context, index) {
                   return OrderSlideCard(orderedModel: orderedModel[index]);
                 },
@@ -43,7 +40,7 @@ class OrderedListState extends State<OrderedList> {
 class OrderSlideCard extends StatelessWidget {
   final OrderedModel orderedModel;
 
-  OrderSlideCard({this.orderedModel});
+  OrderSlideCard({required this.orderedModel});
 
   @override
   Widget build(BuildContext context) {
@@ -79,17 +76,18 @@ class OrderSlideCard extends StatelessWidget {
         children: <Widget>[
           Text(
             "Status: ",
-            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w800),
+            style:
+                TextStyle(color: Colors.white70, fontWeight: FontWeight.w800),
           ),
           orderedModel.isDelivered == false
               ? Icon(
-            Icons.local_shipping,
-            color: Colors.deepOrange,
-          )
+                  Icons.local_shipping,
+                  color: Colors.deepOrange,
+                )
               : Icon(
-            Icons.shopping_basket,
-            color: Colors.greenAccent,
-          ),
+                  Icons.shopping_basket,
+                  color: Colors.greenAccent,
+                ),
         ],
       ),
     );
@@ -99,7 +97,7 @@ class OrderSlideCard extends StatelessWidget {
     return Container(
         height: SizeConfig.blockSizeVertical * 20,
         width: SizeConfig.blockSizeHorizontal * 55,
-        child: Image.network(orderedModel.orderedImage));
+        child: Image.network(orderedModel.orderedImage!));
   }
 
   Widget nameAndQuantityWidgets(OrderedModel orderedModel) {
@@ -110,11 +108,12 @@ class OrderSlideCard extends StatelessWidget {
         children: <Widget>[
           Text(
             "Name: ${orderedModel.nameOfShoe}",
-            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w800),
+            style:
+                TextStyle(color: Colors.white70, fontWeight: FontWeight.w800),
           ),
           Text("quantity: ${orderedModel.quantity}",
-              style:
-              TextStyle(fontWeight: FontWeight.w800, color: Colors.white70)),
+              style: TextStyle(
+                  fontWeight: FontWeight.w800, color: Colors.white70)),
         ],
       ),
     );
@@ -128,15 +127,14 @@ class OrderSlideCard extends StatelessWidget {
         children: <Widget>[
           Text(
             "Size: ${orderedModel.sizeOfShoe}",
-            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w800),
+            style:
+                TextStyle(color: Colors.white70, fontWeight: FontWeight.w800),
           ),
           Text("Total:  \$${orderedModel.orderedPrice}",
-              style:
-              TextStyle(fontWeight: FontWeight.w800, color: Colors.white70)),
+              style: TextStyle(
+                  fontWeight: FontWeight.w800, color: Colors.white70)),
         ],
       ),
     );
   }
-
 }
-

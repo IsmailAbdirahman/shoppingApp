@@ -1,12 +1,12 @@
 class ProductModel {
-  final String productPrice;
-  final String productImage;
-  final String productName;
-  final String productDescription;
-  bool isDelivered = false;
-  final String men;
-  final String women;
-  final List<String> avSize;
+  final String? productPrice;
+  final String?  productImage;
+  final String?  productName;
+  final String?  productDescription;
+  bool?  isDelivered = false;
+  final String?  men;
+  final String?  women;
+  final List<String>?  avSize;
 
   ProductModel(
       {this.productPrice,

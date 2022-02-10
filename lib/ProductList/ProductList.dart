@@ -4,7 +4,7 @@ import 'package:ladhiifshopj/DataService/FireStoreService.dart';
 import 'package:ladhiifshopj/ProductList/DetailScreen.dart';
 import 'package:ladhiifshopj/DataModel/ProductModel.dart';
 import 'package:ladhiifshopj/ProductList/SearchProduct.dart';
-import 'package:provider/provider.dart';
+import 'package:ladhiifshopj/utils/user_auth.dart';
 import '../ConfigScreen.dart';
 
 class ProductList extends StatefulWidget {
@@ -13,10 +13,10 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
-  static String categoryType;
+  static String? categoryType;
   int _selectedIndex = 0;
-  List<ProductModel> male;
-  List<ProductModel> female;
+  List<ProductModel>? male;
+  List<ProductModel>? female;
   List<String> categoryList = ['Men', 'Women'];
 
   Widget genderType(int index) {
@@ -37,7 +37,7 @@ class _ProductListState extends State<ProductList> {
           child: OutlineButton(
             disabledBorderColor: Colors.grey,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             onPressed: null,
             child: Text(
               categoryList[index],
@@ -57,7 +57,7 @@ class _ProductListState extends State<ProductList> {
         stream: FireStoreService().productStream,
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            List<ProductModel> productModel = snapshot.data;
+            List<ProductModel>? productModel = snapshot.data;
 
             return SafeArea(
               child: Scaffold(
@@ -111,7 +111,6 @@ class _ProductListState extends State<ProductList> {
             .entries
             .map((singleType) => genderType(singleType.key))
             .toList());
-
   }
 
   Widget _theShopNameWidget() {
@@ -158,32 +157,36 @@ class _ProductListState extends State<ProductList> {
 class SlideCard extends StatelessWidget {
   final ProductModel productModel;
 
-  SlideCard({this.productModel});
+  SlideCard({required this.productModel});
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    final userID = Provider.of<UserModel>(context);
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await FireStoreService().userInformation(
+            currentUserInfo!.displayName!, currentUserInfo!.email!,
+            currentUserInfo!.photoURL!,
+            currentUserInfo!.uid, "location", "phoneNumber");
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailScreen(
+                builder: (context) =>
+                    DetailScreen(
                       productModel: productModel,
-                      userID: userID.uid,
+                      userID: currentUserInfo!.uid,
                     )));
       },
       child: Container(
         // height: SizeConfig.blockSizeVertical *10,
         width: SizeConfig.blockSizeHorizontal * 80,
         child: Padding(
-          padding: const EdgeInsets.only(top: 40,bottom: 20),
+          padding: const EdgeInsets.only(top: 40, bottom: 20),
           child: Card(
             color: Color(0xff18171b),
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -191,7 +194,6 @@ class SlideCard extends StatelessWidget {
                 Expanded(child: imageWidget()),
                 // Text("kakakaka",style: TextStyle(color: Colors.white),),
                 nameWidget(),
-
               ],
             ),
           ),
@@ -200,40 +202,38 @@ class SlideCard extends StatelessWidget {
     );
   }
 
-
-  Widget priceWidget(){
+  Widget priceWidget() {
     return Align(
       alignment: Alignment.topLeft,
       child: Container(
         height: SizeConfig.blockSizeVertical * 6.5,
         width: SizeConfig.blockSizeHorizontal * 15,
         padding: const EdgeInsets.all(17),
-        margin: const EdgeInsets.only(left: 8,top: 8),
+        margin: const EdgeInsets.only(left: 8, top: 8),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Color(0Xff24202b)),
+            borderRadius: BorderRadius.circular(10), color: Color(0Xff24202b)),
         child: Text(
           '\$' '${productModel.productPrice}',
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w500),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
       ),
     );
   }
-  Widget imageWidget(){
+
+  Widget imageWidget() {
     return Hero(
-      tag: productModel.productImage,
+      tag: productModel.productImage!,
       child: Container(
 //          height: SizeConfig.screenHeight = 107,
 //          width: SizeConfig.blockSizeHorizontal * 66,
         child: Image(
-          image: NetworkImage(productModel.productImage),
-
+          image: NetworkImage(productModel.productImage!),
         ),
       ),
     );
   }
-  Widget nameWidget(){
+
+  Widget nameWidget() {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Container(

@@ -7,10 +7,10 @@
 
 
 class UserData {
-  final String uid;
-  final String name;
-  final String phone;
-  final String location;
+  final String?  uid;
+  final String?  name;
+  final String?  phone;
+  final String?  location;
 
   UserData({this.uid, this.name, this.phone, this.location});
 }

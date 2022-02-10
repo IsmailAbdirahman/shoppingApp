@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
 class SizeConfig {
-  static MediaQueryData _mediaQueryData;
-  static double screenWidth;
-  static double screenHeight;
-  static double blockSizeHorizontal;
-  static double blockSizeVertical;
+  static MediaQueryData _mediaQueryData =MediaQueryData();
+  static double screenWidth = 0.0;
+  static double screenHeight= 0.0;
+  static double blockSizeHorizontal= 0.0;
+  static double blockSizeVertical= 0.0;
 
 
   void init(BuildContext context) {
